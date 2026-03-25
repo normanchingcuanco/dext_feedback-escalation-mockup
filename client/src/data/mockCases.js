@@ -4,8 +4,8 @@ const mockCases = [
     client: "ABC Holdings",
     classification: "Complaint",
     severity: "Critical",
-    owner: "SDM + CAT",
-    status: "Open",
+    owner: "SDM + CAT + FAM",
+    status: "New"
   },
   {
     id: "CASE-002",

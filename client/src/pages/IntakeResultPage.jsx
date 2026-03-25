@@ -69,7 +69,7 @@ function IntakeResultPage() {
           </ul>
 
           <div className="mt-6 flex justify-end">
-            <Button onClick={() => navigate("/cases")}>
+            <Button onClick={() => navigate("/cases/CASE-001")}>
               View Case Record
             </Button>
           </div>

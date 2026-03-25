@@ -1,8 +1,12 @@
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import AppShell from "../components/layout/AppShell";
 import Card from "../components/ui/Card";
-import mockCases from "../data/mockCases";
+import { getAllCases } from "../utils/caseStorage";
 
 function CasesPage() {
+  const cases = useMemo(() => getAllCases(), []);
+
   return (
     <AppShell title="Cases">
       <Card>
@@ -28,10 +32,18 @@ function CasesPage() {
             </thead>
 
             <tbody>
-              {mockCases.map((item) => (
-                <tr key={item.id} className="border-b border-slate-100">
+              {cases.map((item) => (
+                <tr
+                  key={item.id}
+                  className="border-b border-slate-100 transition hover:bg-slate-50"
+                >
                   <td className="px-4 py-4 font-medium text-slate-900">
-                    {item.id}
+                    <Link
+                      to={`/cases/${item.id}`}
+                      className="text-slate-900 underline-offset-4 hover:underline"
+                    >
+                      {item.id}
+                    </Link>
                   </td>
                   <td className="px-4 py-4 text-slate-700">{item.client}</td>
                   <td className="px-4 py-4 text-slate-700">

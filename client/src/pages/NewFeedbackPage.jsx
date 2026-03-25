@@ -1,15 +1,72 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppShell from "../components/layout/AppShell";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
+import { createMockCase, getAllCases } from "../utils/caseStorage";
 
 function NewFeedbackPage() {
   const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    clientName: "",
+    assignedAccountant: "",
+    feedbackType: "Choose feedback type",
+    feedbackDetails: "",
+    preferredContactBack: "Choose an option",
+  });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("SUBMIT CLICKED");
-    navigate("/intake-result");
+
+    const allCases = getAllCases();
+    const nextCaseNumber = String(allCases.length + 1).padStart(3, "0");
+    const nextCaseId = `CASE-${nextCaseNumber}`;
+
+    const classification =
+      formData.feedbackType === "Choose feedback type"
+        ? "Incident"
+        : formData.feedbackType;
+
+    const severity =
+      classification === "Complaint"
+        ? "Critical"
+        : classification === "Incident"
+        ? "High"
+        : classification === "Near Miss"
+        ? "Medium"
+        : "Low";
+
+    const owner =
+      severity === "Critical"
+        ? "SDM + CAT + FAM"
+        : severity === "High"
+        ? "Direct Manager"
+        : "Direct Manager";
+
+    const newCase = {
+      id: nextCaseId,
+      client: formData.clientName || "New Client",
+      classification,
+      severity,
+      owner,
+      status: "New",
+      assignedAccountant: formData.assignedAccountant,
+      feedbackDetails: formData.feedbackDetails,
+      preferredContactBack: formData.preferredContactBack,
+    };
+
+    createMockCase(newCase);
+    navigate(`/cases/${nextCaseId}`);
   };
 
   return (
@@ -36,6 +93,9 @@ function NewFeedbackPage() {
               </label>
               <input
                 type="text"
+                name="clientName"
+                value={formData.clientName}
+                onChange={handleChange}
                 placeholder="Enter client name"
                 className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-slate-500"
               />
@@ -47,6 +107,9 @@ function NewFeedbackPage() {
               </label>
               <input
                 type="text"
+                name="assignedAccountant"
+                value={formData.assignedAccountant}
+                onChange={handleChange}
                 placeholder="Enter accountant name"
                 className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-slate-500"
               />
@@ -56,7 +119,12 @@ function NewFeedbackPage() {
               <label className="mb-2 block text-sm font-medium text-slate-700">
                 Feedback Type
               </label>
-              <select className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-slate-500">
+              <select
+                name="feedbackType"
+                value={formData.feedbackType}
+                onChange={handleChange}
+                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-slate-500"
+              >
                 <option>Choose feedback type</option>
                 <option>Compliment</option>
                 <option>Near Miss</option>
@@ -71,6 +139,9 @@ function NewFeedbackPage() {
               </label>
               <textarea
                 rows="6"
+                name="feedbackDetails"
+                value={formData.feedbackDetails}
+                onChange={handleChange}
                 placeholder="Describe the experience, issue, or concern"
                 className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-slate-500"
               />
@@ -80,7 +151,12 @@ function NewFeedbackPage() {
               <label className="mb-2 block text-sm font-medium text-slate-700">
                 Preferred Contact Back
               </label>
-              <select className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-slate-500">
+              <select
+                name="preferredContactBack"
+                value={formData.preferredContactBack}
+                onChange={handleChange}
+                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-slate-500"
+              >
                 <option>Choose an option</option>
                 <option>Email</option>
                 <option>Phone</option>

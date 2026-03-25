@@ -12,7 +12,7 @@ function AppRoutes() {
         <Route path="/" element={<DashboardPage />} />
         <Route path="/new-feedback" element={<NewFeedbackPage />} />
         <Route path="/cases" element={<CasesPage />} />
-        <Route path="/cases/CASE-001" element={<CaseDetailsPage />} />
+        <Route path="/cases/:caseId" element={<CaseDetailsPage />} />
         <Route path="/intake-result" element={<IntakeResultPage />} />
       </Routes>
     </BrowserRouter>
